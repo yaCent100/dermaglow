@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+/writable/*.db
+/writable/cache/*
+!/writable/cache/index.html
+/writable/logs/*
+!/writable/logs/index.html
+/writable/session/*
+!/writable/session/index.html
+/writable/emails/
+/writable/debugbar/*
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+vendor/stripe/stripe-php/README.md
