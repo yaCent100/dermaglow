@@ -1,5 +1,6 @@
 .env
 .env.*
+/emails/
 !.env.example
 /writable/*.db
 /writable/cache/*
