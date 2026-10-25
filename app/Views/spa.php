@@ -25,7 +25,7 @@
   <meta property="og:image" content="<?= esc($meta['image']) ?>">
   <meta property="og:url" content="<?= esc($url) ?>">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#F6EFE8">
+  <meta name="theme-color" content="#F6F3ED">
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/jost.woff" as="font" type="font/woff" crossorigin>

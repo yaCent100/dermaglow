@@ -38,7 +38,7 @@ export default {
         <div class="article-cover"><PostCover :post="p" /></div>
       </div>
       <div class="container narrow">
-        <p class="lead" v-if="p.excerpt" style="font-family:var(--serif);font-size:1.45rem;color:var(--navy);line-height:1.5;max-width:none">{{ p.excerpt }}</p>
+        <p class="lead" v-if="p.excerpt" style="font-family:var(--serif);font-size:1.2rem;color:var(--navy);line-height:1.55;max-width:none">{{ p.excerpt }}</p>
         <div class="prose" v-html="html"></div>
         <hr class="divider">
         <div class="row between">

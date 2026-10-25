@@ -18,7 +18,7 @@ export default {
   <div class="login-wrap">
     <div class="login-art">
       <img src="/assets/img/hero.jpg" alt="">
-      <div class="over"><img src="/assets/img/logo-light.png" alt="DermaGlow" style="height:26px;margin-bottom:24px"><h2>Votre institut,<br><em style="color:var(--powder)">en un coup d’œil.</em></h2></div>
+      <div class="over"><img src="/assets/img/logo.png" alt="DermaGlow" style="height:26px;margin-bottom:24px"><h2>Votre institut,<br>en un coup d’œil.</h2></div>
     </div>
     <div class="login-form">
       <form @submit.prevent="submit" class="stack">

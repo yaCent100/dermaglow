@@ -70,7 +70,7 @@ export default {
     </div>
     <div class="editor">
       <div class="stack">
-        <input class="input" v-model="p.title" placeholder="Titre de l’article" style="font-family:var(--serif);font-size:1.9rem;padding:14px 18px;color:var(--navy)">
+        <input class="input" v-model="p.title" placeholder="Titre de l’article" style="font-family:var(--serif);font-size:1.5rem;padding:14px 18px;color:var(--navy)">
         <textarea class="textarea" v-model="p.excerpt" rows="2" maxlength="400" placeholder="Chapô : 1 à 2 phrases qui donnent envie de lire (affiché dans les listes et sur Google)"></textarea>
         <div class="tabs" style="margin-bottom:0"><button :class="{on: tab === 'write'}" @click="tab = 'write'">Écrire</button><button :class="{on: tab === 'preview'}" @click="tab = 'preview'">Aperçu</button></div>
         <div v-show="tab === 'write'">

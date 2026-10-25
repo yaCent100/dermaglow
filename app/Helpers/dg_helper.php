@@ -46,7 +46,7 @@ if (! function_exists('md_to_html')) {
             $s = $esc($s);
             $s = preg_replace('/\*\*(.+?)\*\*/s', '<strong>$1</strong>', $s);
             $s = preg_replace('/(?<![*\w])\*(?!\s)(.+?)(?<!\s)\*(?!\w)/s', '<em>$1</em>', $s);
-            $s = preg_replace('/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/', '<a href="$2" style="color:#0E1F3D">$1</a>', $s);
+            $s = preg_replace('/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/', '<a href="$2" style="color:#092743">$1</a>', $s);
 
             return $s;
         };
@@ -55,15 +55,15 @@ if (! function_exists('md_to_html')) {
             $lines = explode("\n", $block);
             if (preg_match('/^(#{1,3})\s+(.*)$/', $block, $m)) {
                 $lvl = strlen($m[1]) + 1;
-                $html .= "<h{$lvl} style=\"font-family:Georgia,serif;font-weight:500;color:#0E1F3D\">" . $inline($m[2]) . "</h{$lvl}>";
+                $html .= "<h{$lvl} style=\"font-family:Georgia,serif;font-weight:normal;color:#092743\">" . $inline($m[2]) . "</h{$lvl}>";
             } elseif (preg_match('/^(\s*[-*]\s+)/', $lines[0])) {
                 $html .= '<ul>' . implode('', array_map(static fn ($l) => '<li>' . $inline(preg_replace('/^\s*[-*]\s+/', '', $l)) . '</li>', $lines)) . '</ul>';
             } elseif (preg_match('/^\d+\.\s+/', $lines[0])) {
                 $html .= '<ol>' . implode('', array_map(static fn ($l) => '<li>' . $inline(preg_replace('/^\d+\.\s+/', '', $l)) . '</li>', $lines)) . '</ol>';
             } elseif (str_starts_with($block, '>')) {
-                $html .= '<blockquote style="border-left:3px solid #B3D5E0;margin:0;padding-left:14px;color:#4A5568">' . $inline(preg_replace('/^>\s?/m', '', $block)) . '</blockquote>';
+                $html .= '<blockquote style="border-left:3px solid #B2D4DF;margin:0;padding-left:14px;color:#4A5568">' . $inline(preg_replace('/^>\s?/m', '', $block)) . '</blockquote>';
             } elseif (trim($block) === '---') {
-                $html .= '<hr style="border:none;border-top:1px solid #E8DCCF">';
+                $html .= '<hr style="border:none;border-top:1px solid #DDCFC2">';
             } else {
                 $html .= '<p>' . nl2br($inline($block)) . '</p>';
             }
