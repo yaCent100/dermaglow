@@ -8,7 +8,7 @@ export default {
   created() { this.load(); },
   methods: {
     euros, duration,
-    async load() { this.cats = await api.get('/admin/catalog'); loadCatalog(true).catch(() => {}); },
+    async load() { this.cats = await api.get('/admin/catalog'); loadCatalog(true).catch(() => { }); },
     editService(s, catId) {
       this.svc = s ? { ...s, price: (s.price_cents / 100).toString(), deposit: s.deposit_cents === null ? '' : (s.deposit_cents / 100).toString(), is_active: !!Number(s.is_active), is_featured: !!Number(s.is_featured) }
         : { category_id: catId, name: '', short_description: '', description: '', price: '', duration_min: 30, deposit: '', is_active: true, is_featured: false };

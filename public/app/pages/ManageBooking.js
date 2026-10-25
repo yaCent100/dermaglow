@@ -38,7 +38,8 @@ export default {
 
           <template v-if="b.can_cancel">
             <hr class="divider">
-            <p class="small">{{ b.refund_if_cancel ? 'Vous pouvez annuler gratuitement : votre acompte vous sera remboursé.' : 'Le rendez-vous a lieu dans moins de ' + (config?.cancellation_hours || 48) + ' h : en cas d’annulation, l’acompte reste acquis.' }}
+            <p class="small"><template v-if="b.payment_status === 'deposit_paid'">{{ b.refund_if_cancel ? 'Vous pouvez annuler gratuitement : votre acompte vous sera remboursé.' : 'Le rendez-vous a lieu dans moins de ' + (config?.cancellation_hours || 48) + ' h : en cas d’annulation, l’acompte reste acquis.' }}</template>
+              <template v-else>Un empêchement ? Merci d’annuler au moins {{ config?.cancellation_hours || 48 }} h à l’avance pour libérer le créneau.</template>
               Pour <strong>déplacer</strong> votre rendez-vous, appelez-nous au <a :href="'tel:' + (config?.phone||'').replace(/\\s/g,'')" class="link">{{ config?.phone }}</a>.</p>
             <button class="btn danger ghost" @click="confirm = true">Annuler mon rendez-vous</button>
           </template>
@@ -48,7 +49,8 @@ export default {
     </div>
 
     <Modal v-if="confirm" title="Annuler le rendez-vous ?" @close="confirm = false">
-      <p>{{ b.refund_if_cancel ? 'Votre acompte de ' + euros(b.deposit_cents) + ' sera remboursé sous 5 à 10 jours.' : 'L’acompte de ' + euros(b.deposit_cents) + ' ne sera pas remboursé (annulation tardive).' }}</p>
+      <p v-if="b.payment_status === 'deposit_paid'">{{ b.refund_if_cancel ? 'Votre acompte de ' + euros(b.deposit_cents) + ' sera remboursé sous 5 à 10 jours.' : 'L’acompte de ' + euros(b.deposit_cents) + ' ne sera pas remboursé (annulation tardive).' }}</p>
+      <p v-else>Le créneau sera libéré pour une autre cliente.</p>
       <div class="field"><label>Motif (facultatif)</label><input class="input" v-model="reason" maxlength="200"></div>
       <template #foot>
         <button class="btn ghost" @click="confirm = false">Garder mon RDV</button>

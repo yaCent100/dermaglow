@@ -2,6 +2,11 @@
 
 namespace App\Controllers\Api;
 
+/*
+ * STRIPE DÉSACTIVÉ — webhook de confirmation des paiements.
+ * Pour le réactiver : retirer ce commentaire, remettre la route
+ * `stripe/webhook` dans app/Config/Routes.php et passer Payments::ENABLED à true.
+ *
 use App\Controllers\BaseController;
 use App\Libraries\BookingService;
 use Stripe\Webhook;
@@ -10,7 +15,7 @@ use Stripe\Webhook;
  * POST /api/stripe/webhook
  * À déclarer dans Stripe > Développeurs > Webhooks avec les événements :
  *   checkout.session.completed, checkout.session.async_payment_succeeded, checkout.session.expired
- */
+ * /
 class StripeWebhook extends BaseController
 {
     public function handle()
@@ -57,3 +62,5 @@ class StripeWebhook extends BaseController
         return $this->ok(['received' => true]);
     }
 }
+
+*/

@@ -121,6 +121,7 @@ export const SiteFooter = {
           <OpeningHours :hours="store.config?.opening_hours" />
         </div>
       </div>
+      <div class="footer-mark"><img src="/assets/img/logo-light.png" alt="" width="734" height="108" loading="lazy"></div>
       <div class="footer-bottom">
         <span>© {{ year }} {{ store.config?.salon_name || 'DermaGlow' }}. Tous droits réservés.</span>
         <span class="row" style="gap:20px"><RouterLink to="/conditions">Conditions de réservation</RouterLink><RouterLink to="/confidentialite">Confidentialité</RouterLink></span>

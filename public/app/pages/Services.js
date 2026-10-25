@@ -1,4 +1,4 @@
-import { store, loadCatalog, toggleCart, allServices } from '../store.js';
+import { store, loadCatalog, toggleCart, allServices, paymentOnline } from '../store.js';
 import { euros, duration } from '../utils.js';
 
 export default {
@@ -7,6 +7,7 @@ export default {
   computed: {
     catalog() { return store.catalog || []; },
     cart() { return store.cart; },
+    online() { return paymentOnline(); },
     selected() { return allServices().filter((s) => store.cart.includes(s.id)); },
     total() { return this.selected.reduce((n, s) => n + s.price_cents, 0); },
     totalDuration() { return this.selected.reduce((n, s) => n + s.duration_min, 0); },
@@ -40,7 +41,7 @@ export default {
       <div class="container">
         <div class="eyebrow">Nos prix</div>
         <h1>Soins <em>&</em> tarifs</h1>
-        <p class="lead">Sélectionnez un ou plusieurs soins avec le bouton <strong>+</strong>, puis choisissez votre créneau. Un acompte confirme votre réservation, le solde se règle sur place.</p>
+        <p class="lead">Sélectionnez un ou plusieurs soins avec le bouton <strong>+</strong>, puis choisissez votre créneau. <template v-if="online">Un acompte confirme votre réservation, le solde se règle sur place.</template><template v-else>Le règlement se fait sur place, le jour du soin.</template></p>
       </div>
     </section>
 

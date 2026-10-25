@@ -45,7 +45,7 @@ export default {
     <div class="container narrow">
       <div v-if="state === 'loading' || state === 'waiting'" class="state">
         <div class="ring wait"><Spinner lg /></div>
-        <h2>Vérification du paiement…</h2>
+        <h2>Confirmation en cours…</h2>
         <p class="muted">Cela ne prend que quelques secondes.</p>
       </div>
 
@@ -62,7 +62,7 @@ export default {
             <span class="badge confirmed">Confirmé</span>
           </div>
           <div v-for="i in b.items" :key="i.service_name" class="summary-line"><span class="l">{{ i.service_name }} <span class="muted small">· {{ duration(i.duration_min) }}</span></span><span class="r">{{ euros(i.price_cents) }}</span></div>
-          <div class="summary-line" style="color:var(--success)"><span>Acompte payé</span><span>− {{ euros(b.deposit_cents) }}</span></div>
+          <div class="summary-line" style="color:var(--success)" v-if="b.payment_status === 'deposit_paid'"><span>Acompte payé</span><span>− {{ euros(b.deposit_cents) }}</span></div>
           <div class="summary-total"><span>Reste à régler sur place</span><span class="v">{{ euros(b.balance_cents) }}</span></div>
           <hr class="divider">
           <div class="row" style="gap:10px">

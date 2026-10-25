@@ -13,6 +13,11 @@ export const store = reactive({
   toasts: [],
 });
 
+/** Paiement en ligne actif ? (Stripe désactivé actuellement : tout se règle sur place) */
+export function paymentOnline() {
+  return ['stripe', 'simulation'].includes(store.config?.payment_mode);
+}
+
 export function saveCart() {
   try { sessionStorage.setItem('dg_cart', JSON.stringify(store.cart)); } catch { /* navigation privée */ }
 }

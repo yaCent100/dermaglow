@@ -52,7 +52,7 @@ export default {
   <div>
     <div class="admin-top"><h1>Réglages</h1><button v-if="['info','hours','booking'].includes(tab)" class="btn sm" @click="save" :disabled="busy"><Icon name="check" /> Enregistrer</button></div>
     <div class="tabs">
-      <button v-for="[k, l] in [['info','L’institut'],['hours','Horaires'],['booking','Réservation & acompte'],['closures','Fermetures'],['system','Sécurité & système']]" :key="k" :class="{on: tab === k}" @click="tab = k">{{ l }}</button>
+      <button v-for="[k, l] in [['info','L’institut'],['hours','Horaires'],['booking','Réservation'],['closures','Fermetures'],['system','Sécurité & système']]" :key="k" :class="{on: tab === k}" @click="tab = k">{{ l }}</button>
     </div>
     <div v-if="!s" class="skeleton" style="height:300px"></div>
     <template v-else>
@@ -87,13 +87,19 @@ export default {
 
       <div v-show="tab === 'booking'" class="grid c2" style="align-items:start;max-width:1100px">
         <div class="card panel stack">
+          <template v-if="sys.payment_mode !== 'disabled'">
           <h3>Acompte</h3>
           <div class="field"><label>Type d’acompte</label><select class="select" v-model="s.deposit_type"><option value="percent">Pourcentage du prix</option><option value="fixed">Montant fixe par rendez-vous</option></select></div>
           <div class="field"><label>{{ s.deposit_type === 'fixed' ? 'Montant (€)' : 'Pourcentage (%)' }}</label><input class="input" inputmode="decimal" v-model="s.deposit_value"></div>
           <div class="field"><label>Acompte minimum (€)</label><input class="input" inputmode="decimal" v-model="s.deposit_min_eur"></div>
           <div class="alert info small"><Icon name="info" /><span>Exemple : pour un soin à 120 €, l’acompte sera de <strong>{{ depositExample }}</strong>. Un acompte fixe peut aussi être défini soin par soin.</span></div>
-          <div class="field"><label>Annulation gratuite jusqu’à (heures avant)</label><input type="number" class="input" v-model="s.cancellation_hours"></div>
-          <div class="field"><label>Durée de blocage du créneau pendant le paiement (min)</label><input type="number" class="input" min="30" v-model="s.pending_minutes"></div>
+          </template>
+          <template v-else>
+            <h3>Paiement</h3>
+            <div class="alert info small"><Icon name="info" /><span>Le paiement en ligne (Stripe) est désactivé : les rendez-vous sont confirmés immédiatement et réglés sur place.</span></div>
+          </template>
+          <div class="field"><label>Délai d’annulation demandé (heures avant)</label><input type="number" class="input" v-model="s.cancellation_hours"></div>
+          <div class="field" v-if="sys.payment_mode !== 'disabled'"><label>Durée de blocage du créneau pendant le paiement (min)</label><input type="number" class="input" min="30" v-model="s.pending_minutes"></div>
         </div>
         <div class="card panel stack">
           <h3>Agenda</h3>
@@ -128,11 +134,11 @@ export default {
         </div>
         <div class="card panel">
           <h3>État du système</h3>
-          <div class="list-row"><span class="grow">Paiement Stripe</span><span class="badge" :class="sys.payment_mode === 'stripe_live' ? 'active' : sys.payment_mode === 'stripe_test' ? 'completed' : 'pending'">{{ {stripe_live:'Actif (réel)',stripe_test:'Mode test Stripe',simulation:'Simulation locale',disabled:'Non configuré'}[sys.payment_mode] }}</span></div>
-          <div class="list-row"><span class="grow">Webhook Stripe</span><span class="badge" :class="sys.webhook ? 'active' : 'pending'">{{ sys.webhook ? 'Configuré' : 'Manquant' }}</span></div>
+          <div class="list-row"><span class="grow">Paiement Stripe</span><span class="badge" :class="sys.payment_mode === 'stripe_live' ? 'active' : sys.payment_mode === 'stripe_test' ? 'completed' : 'pending'">{{ {stripe_live:'Actif (réel)',stripe_test:'Mode test Stripe',simulation:'Simulation locale',disabled:'Désactivé (paiement sur place)'}[sys.payment_mode] }}</span></div>
+          <div class="list-row" v-if="sys.payment_mode !== 'disabled'"><span class="grow">Webhook Stripe</span><span class="badge" :class="sys.webhook ? 'active' : 'pending'">{{ sys.webhook ? 'Configuré' : 'Manquant' }}</span></div>
           <div class="list-row"><span class="grow">Envoi d’e-mails (SMTP)</span><span class="badge" :class="sys.smtp ? 'active' : 'pending'">{{ sys.smtp ? 'Configuré' : 'Non configuré' }}</span></div>
           <div class="list-row"><span class="grow">Environnement</span><span class="badge plain">{{ sys.environment }}</span></div>
-          <p class="small muted" style="margin-top:14px">URL du webhook à déclarer dans Stripe :<br><code>{{ sys.webhook_url }}</code></p>
+          <p class="small muted" style="margin-top:14px" v-if="sys.payment_mode !== 'disabled'">URL du webhook à déclarer dans Stripe :<br><code>{{ sys.webhook_url }}</code></p>
           <p class="small muted">Les clés se règlent dans le fichier <code>.env</code> sur l’hébergement (voir le guide).</p>
         </div>
       </div>

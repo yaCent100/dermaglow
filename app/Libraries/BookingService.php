@@ -68,6 +68,10 @@ class BookingService
         $total    = array_sum(array_column($services, 'price_cents'));
         $deposit  = Settings::depositFor($services);
 
+        // Sans paiement en ligne (Stripe désactivé), le RDV est confirmé tout de suite
+        // et tout se règle sur place.
+        $direct = $byAdmin || ! Payments::enabled();
+
         $this->db->transBegin();
         try {
             // Vérification du créneau à l'intérieur de la transaction
@@ -90,12 +94,12 @@ class BookingService
                 'start_at'         => $start,
                 'end_at'           => $end,
                 'total_cents'      => $total,
-                'deposit_cents'    => $byAdmin ? 0 : $deposit,
-                'status'           => $byAdmin ? 'confirmed' : 'pending_payment',
+                'deposit_cents'    => $direct ? 0 : $deposit,
+                'status'           => $direct ? 'confirmed' : 'pending_payment',
                 'payment_status'   => 'unpaid',
                 'source'           => $byAdmin ? 'admin' : 'web',
                 'newsletter_optin' => ! empty($in['newsletter']) ? 1 : 0,
-                'expires_at'       => $byAdmin ? null : date('Y-m-d H:i:s', strtotime('+' . max(30, Settings::int('pending_minutes', 30)) . ' minutes')),
+                'expires_at'       => $direct ? null : date('Y-m-d H:i:s', strtotime('+' . max(30, Settings::int('pending_minutes', 30)) . ' minutes')),
                 'created_at'       => $now,
                 'updated_at'       => $now,
             ];
@@ -119,6 +123,12 @@ class BookingService
         }
 
         if ($byAdmin && ! empty($in['send_email'])) {
+            $this->sendConfirmation($row['id']);
+        } elseif (! $byAdmin && ! Payments::enabled()) {
+            // Réservation en ligne sans paiement : confirmation immédiate
+            if (! empty($in['newsletter'])) {
+                (new NewsletterService())->subscribe($row['email'], $row['first_name'], 'booking', true);
+            }
             $this->sendConfirmation($row['id']);
         }
 

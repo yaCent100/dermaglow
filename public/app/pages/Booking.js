@@ -1,5 +1,5 @@
 import { api } from '../api.js';
-import { store, loadCatalog, loadConfig, toggleCart, allServices } from '../store.js';
+import { store, loadCatalog, loadConfig, toggleCart, allServices, paymentOnline } from '../store.js';
 import { euros, duration, fmtDate, cap } from '../utils.js';
 import Calendar from '../components/Calendar.js';
 
@@ -33,7 +33,9 @@ export default {
     selected() { const all = allServices(); return store.cart.map((id) => all.find((s) => s.id === id)).filter(Boolean); },
     total() { return this.selected.reduce((n, s) => n + s.price_cents, 0); },
     totalDuration() { return this.selected.reduce((n, s) => n + s.duration_min, 0); },
+    online() { return paymentOnline(); },
     deposit() {
+      if (!paymentOnline()) return 0;
       // Aperçu : l'API recalcule le montant exact
       if (!this.selected.length || !this.config) return 0;
       let sum = 0;
@@ -205,11 +207,15 @@ export default {
               <dt>Contact</dt><dd>{{ form.email }} · {{ form.phone }}</dd>
               <template v-if="form.notes"><dt>Message</dt><dd>{{ form.notes }}</dd></template>
             </dl>
-            <div class="alert info" style="margin-bottom:18px">
+            <div class="alert info" style="margin-bottom:18px" v-if="online">
               <Icon name="lock" />
               <span>Vous allez être redirigée vers notre page de paiement sécurisée pour régler l’acompte de <strong>{{ euros(deposit) }}</strong>. Votre créneau est bloqué pendant {{ config?.pending_minutes || 30 }} minutes.</span>
             </div>
-            <label class="check"><input type="checkbox" v-model="form.accept_terms"> <span>J’accepte les <RouterLink to="/conditions" target="_blank" class="link">conditions de réservation</RouterLink> : acompte remboursé en cas d’annulation au moins {{ config?.cancellation_hours || 48 }} h avant le rendez-vous.</span></label>
+            <div class="alert info" style="margin-bottom:18px" v-else>
+              <Icon name="info" />
+              <span>Aucun paiement en ligne : votre rendez-vous est confirmé immédiatement et le règlement se fait <strong>sur place</strong>, le jour du soin.</span>
+            </div>
+            <label class="check"><input type="checkbox" v-model="form.accept_terms"> <span>J’accepte les <RouterLink to="/conditions" target="_blank" class="link">conditions de réservation</RouterLink><template v-if="online"> : acompte remboursé en cas d’annulation au moins {{ config?.cancellation_hours || 48 }} h avant le rendez-vous</template><template v-else> : en cas d’empêchement, merci d’annuler au moins {{ config?.cancellation_hours || 48 }} h avant le rendez-vous</template>.</span></label>
             <p v-if="config?.payment_mode === 'simulation'" class="small" style="margin:16px 0 0;color:var(--warning)"><Icon name="info" size="14" style="display:inline;vertical-align:-2px" /> Mode test : le paiement est simulé (aucune clé Stripe configurée).</p>
           </div>
 
@@ -217,8 +223,9 @@ export default {
             <button class="btn ghost" v-if="step > 0" @click="back" :disabled="submitting"><Icon name="arrow-left" /> Retour</button>
             <span v-else></span>
             <button class="btn" @click="next" :disabled="!canNext || submitting">
-              <template v-if="submitting"><Spinner /> Redirection…</template>
-              <template v-else-if="step === 3"><Icon name="lock" /> Payer l’acompte de {{ euros(deposit) }}</template>
+              <template v-if="submitting"><Spinner /> {{ online ? 'Redirection…' : 'Confirmation…' }}</template>
+              <template v-else-if="step === 3 && online"><Icon name="lock" /> Payer l’acompte de {{ euros(deposit) }}</template>
+              <template v-else-if="step === 3"><Icon name="check" /> Confirmer mon rendez-vous</template>
               <template v-else>Continuer <Icon name="arrow-right" /></template>
             </button>
           </div>
@@ -239,9 +246,13 @@ export default {
             <span class="r">{{ time ? time.replace(':', 'h') : '—' }}</span>
           </div>
           <div class="summary-total" v-if="selected.length"><span>Total · {{ duration(totalDuration) }}</span><span class="v">{{ euros(total) }}</span></div>
-          <div class="deposit-box" v-if="selected.length">
+          <div class="deposit-box" v-if="selected.length && online">
             <div class="row between"><span>Acompte à régler en ligne</span><span class="v">{{ euros(deposit) }}</span></div>
             <div class="small" style="opacity:.8;margin-top:4px">Solde de {{ euros(total - deposit) }} à régler sur place.</div>
+          </div>
+          <div class="deposit-box" v-else-if="selected.length">
+            <div class="row between"><span>À régler sur place</span><span class="v">{{ euros(total) }}</span></div>
+            <div class="small" style="opacity:.8;margin-top:4px">Aucun paiement en ligne.</div>
           </div>
         </aside>
       </div>

@@ -17,7 +17,8 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function (R
     $r->post('bookings/(:segment)/cancel', 'Bookings::cancel/$1', ['filter' => 'throttle:5,60']);
     $r->post('bookings/(:segment)/abandon', 'Bookings::abandon/$1');
     $r->post('bookings/(:segment)/simulate-payment', 'Bookings::simulate/$1');
-    $r->post('stripe/webhook', 'StripeWebhook::handle');
+    // STRIPE DÉSACTIVÉ — webhook du paiement en ligne :
+    // $r->post('stripe/webhook', 'StripeWebhook::handle');
 
     $r->get('posts', 'Content::posts');
     $r->get('posts/categories', 'Content::categories');

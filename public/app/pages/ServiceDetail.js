@@ -1,5 +1,5 @@
 import { api } from '../api.js';
-import { store, toggleCart } from '../store.js';
+import { store, toggleCart, paymentOnline } from '../store.js';
 import { euros, duration, setTitle } from '../utils.js';
 import { ServiceCard } from '../components/site.js';
 
@@ -7,7 +7,7 @@ export default {
   name: 'ServiceDetailPage',
   components: { ServiceCard },
   data: () => ({ s: null, notFound: false }),
-  computed: { inCart() { return this.s && store.cart.includes(this.s.id); } },
+  computed: { inCart() { return this.s && store.cart.includes(this.s.id); }, online() { return paymentOnline(); } },
   watch: { '$route.params.slug': { immediate: true, handler() { this.load(); } } },
   methods: {
     euros, duration,
@@ -41,7 +41,7 @@ export default {
             </div>
             <div class="card pad">
               <div class="summary-line"><span class="l muted">Durée</span><span class="r">{{ duration(s.duration_min) }}</span></div>
-              <div class="summary-line"><span class="l muted">Acompte en ligne</span><span class="r">{{ euros(s.deposit_cents) }}</span></div>
+              <div class="summary-line" v-if="online"><span class="l muted">Acompte en ligne</span><span class="r">{{ euros(s.deposit_cents) }}</span></div>
               <div class="summary-total"><span>Prix</span><span class="v">{{ euros(s.price_cents) }}</span></div>
               <div class="row" style="margin-top:22px">
                 <button class="btn grow" @click="book">Réserver ce soin <Icon name="arrow-right" /></button>
@@ -49,7 +49,8 @@ export default {
                   <Icon :name="inCart ? 'check' : 'plus'" />
                 </button>
               </div>
-              <p class="small muted" style="margin:14px 0 0">Le solde de {{ euros(s.price_cents - s.deposit_cents) }} se règle sur place.</p>
+              <p class="small muted" style="margin:14px 0 0" v-if="online">Le solde de {{ euros(s.price_cents - s.deposit_cents) }} se règle sur place.</p>
+              <p class="small muted" style="margin:14px 0 0" v-else>Le règlement se fait sur place, le jour du soin.</p>
             </div>
           </div>
         </div>

@@ -2,38 +2,62 @@
 
 namespace App\Libraries;
 
-use Stripe\StripeClient;
+// use Stripe\StripeClient; // STRIPE DÉSACTIVÉ
 
 /**
- * Paiement de l'acompte avec Stripe Checkout.
+ * Paiement en ligne (acompte Stripe) — ACTUELLEMENT DÉSACTIVÉ.
  *
- * Sans clé STRIPE_SECRET_KEY et en environnement "development",
- * un mode simulé permet de tester tout le parcours sans Stripe.
+ * Les rendez-vous sont confirmés immédiatement, sans paiement :
+ * tout se règle sur place.
+ *
+ * Pour réactiver Stripe plus tard :
+ *   1. Passer ENABLED à true ci-dessous.
+ *   2. Décommenter le code marqué « STRIPE DÉSACTIVÉ » dans ce fichier
+ *      (et la ligne `use Stripe\StripeClient;` en haut).
+ *   3. Décommenter la route du webhook dans app/Config/Routes.php
+ *      et le contenu de app/Controllers/Api/StripeWebhook.php.
+ *   4. Remplir STRIPE_SECRET_KEY et STRIPE_WEBHOOK_SECRET dans le .env.
  */
 class Payments
 {
+    /** Interrupteur général du paiement en ligne. */
+    public const ENABLED = false;
+
+    public static function enabled(): bool
+    {
+        return self::ENABLED;
+    }
+
     public static function isSimulated(): bool
     {
-        return trim((string) env('STRIPE_SECRET_KEY', '')) === '' && ENVIRONMENT !== 'production';
+        return self::ENABLED && trim((string) env('STRIPE_SECRET_KEY', '')) === '' && ENVIRONMENT !== 'production';
     }
 
     public static function isConfigured(): bool
     {
-        return trim((string) env('STRIPE_SECRET_KEY', '')) !== '';
+        return self::ENABLED && trim((string) env('STRIPE_SECRET_KEY', '')) !== '';
     }
 
+    /* STRIPE DÉSACTIVÉ
     public static function client(): StripeClient
     {
         return new StripeClient((string) env('STRIPE_SECRET_KEY'));
     }
+    */
 
     /**
      * Crée la session de paiement et renvoie l'URL de redirection.
+     * Paiement désactivé : renvoie directement la page de confirmation.
      */
     public static function createCheckout(array $booking, array $items): string
     {
         $site = rtrim(base_url(), '/');
 
+        if (! self::ENABLED) {
+            return $site . '/reservation/confirmation?ref=' . $booking['reference'] . '&t=' . $booking['manage_token'];
+        }
+
+        /* STRIPE DÉSACTIVÉ
         if (self::isSimulated()) {
             return $site . '/reservation/paiement-test?ref=' . $booking['reference'] . '&t=' . $booking['manage_token'];
         }
@@ -73,17 +97,22 @@ class Payments
         db_connect()->table('bookings')->where('id', $booking['id'])->update(['stripe_session_id' => $session->id]);
 
         return $session->url;
+        */
+
+        return $site . '/reservation/confirmation?ref=' . $booking['reference'] . '&t=' . $booking['manage_token'];
     }
 
     /**
-     * Vérifie directement auprès de Stripe si la session est payée
-     * (filet de sécurité si le webhook arrive en retard).
+     * Vérifie auprès de Stripe si la session est payée.
+     * Paiement désactivé : toujours null.
      */
     public static function sessionIsPaid(string $sessionId): ?array
     {
         if (! self::isConfigured() || $sessionId === '') {
             return null;
         }
+
+        /* STRIPE DÉSACTIVÉ
         try {
             $s = self::client()->checkout->sessions->retrieve($sessionId);
             if ($s->payment_status === 'paid') {
@@ -92,13 +121,21 @@ class Payments
         } catch (\Throwable $e) {
             log_message('error', 'Stripe retrieve: ' . $e->getMessage());
         }
+        */
 
         return null;
     }
 
-    /** Remboursement (total ou partiel) de l'acompte. Renvoie le montant remboursé. */
+    /**
+     * Remboursement de l'acompte. Paiement désactivé : rien à rembourser.
+     */
     public static function refund(array $booking, ?int $amountCents = null): int
     {
+        if (! self::ENABLED) {
+            return 0;
+        }
+
+        /* STRIPE DÉSACTIVÉ
         $amount = $amountCents ?? (int) $booking['deposit_cents'];
         if ($amount <= 0) {
             return 0;
@@ -112,5 +149,8 @@ class Payments
         ]);
 
         return $amount;
+        */
+
+        return 0;
     }
 }

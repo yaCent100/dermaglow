@@ -649,58 +649,91 @@ h4 { font-size: 1.3rem; }
 .admin-top h1 { font-size: clamp(2rem, 3vw, 2.6rem); }
 .panel-head h3 { font-size: 1.5rem; }
 
-/* ---------- Accueil ---------- */
-.home-hero { margin: 0 clamp(12px, 2.4vw, 32px); background: var(--powder); border-radius: var(--radius-lg); overflow: hidden; display: grid; grid-template-columns: 1.15fr .85fr; min-height: 620px; }
-.home-hero .txt { padding: clamp(56px, 7vw, 96px) 0 clamp(48px, 6vw, 80px) clamp(28px, 5.5vw, 72px); display: flex; flex-direction: column; justify-content: center; }
-.home-hero h1 { margin: 0 0 28px; line-height: 1.02; }
-.home-hero p { max-width: 42ch; font-size: 1.06rem; margin: 0 0 36px; }
-.home-hero .actions { display: flex; gap: 12px; flex-wrap: wrap; }
-.home-hero .where { font-size: .9rem; margin-top: 48px; display: flex; gap: 12px; align-items: center; }
-.home-hero .where::before { content: ""; width: 36px; height: 1px; background: var(--navy); }
-.arch { position: relative; align-self: end; justify-self: center; width: min(400px, 80%); aspect-ratio: 400 / 540; margin-top: 60px; }
-.arch .ph { position: absolute; inset: 0; border-radius: 999px 999px 0 0; overflow: hidden; background: var(--cream); }
-.arch img { width: 100%; height: 100%; object-fit: cover; }
-.arch::before { content: ""; position: absolute; inset: -26px -26px 0 -26px; border: 1px solid var(--navy); border-bottom: 0; border-radius: 999px 999px 0 0; }
-@media (max-width: 860px) {
-  .home-hero { grid-template-columns: 1fr; }
-  .home-hero .txt { padding-right: clamp(28px, 5.5vw, 72px); }
-  .arch { width: min(320px, 76%); margin-top: 32px; }
-}
-
-.split { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
-.split .intro p { color: var(--muted); max-width: 38ch; }
-@media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
-
-.carte { list-style: none; margin: 0; padding: 0; }
-.carte li { border-bottom: 1px solid var(--nude); }
-.carte li:first-child { border-top: 1px solid var(--nude); }
-.carte a { display: grid; grid-template-columns: 1fr auto; gap: 4px 24px; padding: 22px 0; }
-.carte b { font-family: var(--serif); font-weight: 400; font-size: 1.7rem; line-height: 1.15; }
-.carte span { font-weight: 500; white-space: nowrap; padding-top: 6px; }
-.carte small { grid-column: 1; color: var(--muted); font-size: .92rem; }
-.carte a:hover b { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; }
-
-.zones { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.zone { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 280px; padding: 26px; border-radius: var(--radius); overflow: hidden; color: var(--navy); }
-.zone::before { content: ""; position: absolute; left: 50%; top: 26px; width: 62%; aspect-ratio: 1; transform: translateX(-50%); border: 1px solid var(--navy); border-bottom: 0; border-radius: 999px 999px 0 0; opacity: .4; }
-.zone.t0 { background: var(--powder); }
-.zone.t1 { background: var(--white); border: 1px solid var(--sand); }
-.zone.t2 { background: var(--nude); }
-.zone h3 { margin: 0 0 6px; position: relative; }
-.zone p { margin: 0; font-size: .9rem; position: relative; }
-@media (max-width: 980px) { .zones { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 480px) { .zones { grid-template-columns: 1fr; } .zone { min-height: 200px; } }
-
-.pillars { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 4vw, 56px); }
-.pillars h3 { margin-bottom: 10px; }
-.pillars p { color: var(--muted); margin: 0; }
-@media (max-width: 760px) { .pillars { grid-template-columns: 1fr; } }
-
-.cta-band { margin: 0 clamp(12px, 2.4vw, 32px); background: var(--navy); color: var(--cream); border-radius: var(--radius-lg); padding: clamp(40px, 6vw, 72px); display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-.cta-band h2 { color: var(--cream); margin: 0; }
-.cta-band .btn { --bg: var(--powder); --fg: var(--navy); --bd: var(--powder); }
-.cta-band .btn:hover { background: var(--white); border-color: var(--white); }
-
 .newsletter-band { border-radius: var(--radius-lg); }
 .newsletter-band::before { opacity: .3; }
 .steps > div::before { color: var(--powder); }
+
+/* =====================================================================
+   ACCUEIL — identité DermaGlow
+   ===================================================================== */
+.dg-link { display: inline-flex; align-items: center; gap: 10px; font-size: .95rem; color: var(--navy); padding-bottom: 4px; border-bottom: 1px solid currentColor; }
+.dg-link:hover { opacity: .7; }
+
+/* Couverture : titre très grand, arche qui déborde sur la section suivante */
+.dg-hero { position: relative; background: var(--powder); color: var(--navy); padding: clamp(40px, 6vw, 80px) 0 0; overflow: visible; z-index: 1; }
+.dg-hero-inner { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); position: relative; z-index: 2; min-height: clamp(520px, 72vh, 760px); display: flex; flex-direction: column; justify-content: space-between; }
+.dg-hero h1 { font-size: clamp(3.4rem, 9.2vw, 9.4rem); font-weight: 300; line-height: .92; letter-spacing: -.035em; margin: 0; max-width: 9.5ch; }
+.dg-hero-foot { display: grid; grid-template-columns: minmax(0, 34ch) auto; gap: 24px 48px; align-items: end; padding: 40px 0 clamp(40px, 6vw, 72px); max-width: 58%; }
+.dg-hero-foot p { margin: 0; font-size: 1.02rem; }
+.dg-hero-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.dg-arch { position: absolute; z-index: 1; right: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter))); top: clamp(90px, 10vw, 140px); width: clamp(290px, 37vw, 540px); aspect-ratio: 470 / 660; margin: 0; }
+.dg-arch img { width: 100%; height: 100%; object-fit: cover; border-radius: 999px 999px 0 0; display: block; }
+.dg-arch::before { content: ""; position: absolute; inset: -22px -22px 18% -22px; border: 1px solid var(--navy); border-bottom: 0; border-radius: 999px 999px 0 0; }
+@media (max-width: 900px) {
+  .dg-hero-inner { min-height: 0; }
+  .dg-hero h1 { font-size: clamp(3rem, 14vw, 5.2rem); }
+  .dg-hero-foot { max-width: none; grid-template-columns: 1fr; padding-bottom: 32px; }
+  .dg-arch { position: relative; right: auto; top: auto; width: min(78vw, 360px); margin: 0 auto -110px; }
+}
+
+/* Soins visage : grande liste façon carte */
+.dg-face { padding: clamp(140px, 16vw, 220px) 0 clamp(72px, 9vw, 120px); }
+.dg-face-grid { display: grid; grid-template-columns: .75fr 1.25fr; gap: clamp(40px, 7vw, 110px); align-items: start; }
+.dg-face-intro { position: sticky; top: 120px; }
+.dg-face-intro h2 { font-size: clamp(2.6rem, 4.6vw, 4.2rem); font-weight: 300; line-height: .98; margin-bottom: 24px; }
+.dg-face-intro p { color: var(--muted); max-width: 34ch; margin-bottom: 28px; }
+.dg-face-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--navy); }
+.dg-face-list li { border-bottom: 1px solid var(--nude); }
+.dg-face-list a { display: grid; grid-template-columns: 1fr auto; gap: 6px 24px; padding: 26px 0 24px; position: relative; transition: padding .35s var(--ease); }
+.dg-face-list a::before { content: ""; position: absolute; left: 0; top: 50%; width: 22px; height: 30px; border: 1px solid var(--navy); border-bottom: 0; border-radius: 999px 999px 0 0; transform: translate(-8px, -50%); opacity: 0; transition: opacity .35s, transform .35s var(--ease); }
+.dg-face-list a:hover { padding-left: 42px; }
+.dg-face-list a:hover::before { opacity: 1; transform: translate(0, -50%); }
+.dg-face-name { font-family: var(--serif); font-size: clamp(1.6rem, 2.6vw, 2.3rem); line-height: 1.1; }
+.dg-face-price { font-size: 1.05rem; font-weight: 500; padding-top: 8px; }
+.dg-face-desc { grid-column: 1 / -1; color: var(--muted); font-size: .92rem; }
+@media (max-width: 900px) { .dg-face-grid { grid-template-columns: 1fr; } .dg-face-intro { position: static; } }
+
+/* Épilation laser : zones à sélectionner, sur marine */
+.dg-laser { background: var(--navy); color: var(--cream); padding: clamp(72px, 9vw, 120px) 0; }
+.dg-laser h2 { color: var(--cream); font-size: clamp(2.6rem, 5vw, 4.6rem); font-weight: 300; margin: 0; }
+.dg-laser-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(36px, 5vw, 64px); }
+.dg-laser-head p { margin: 0; color: var(--powder); max-width: 36ch; }
+.dg-zones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(32px, 5vw, 72px); }
+.dg-zone { border-top: 1px solid rgba(178, 212, 223, .35); padding: 26px 0 30px; }
+.dg-zone h3 { color: var(--powder); font-size: 1.6rem; margin: 0 0 16px; }
+.dg-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.dg-chip { display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; border-radius: 999px; border: 1px solid rgba(246, 243, 237, .35); background: transparent; color: var(--cream); font-size: .9rem; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.dg-chip em { font-style: normal; opacity: .7; font-size: .84rem; }
+.dg-chip:hover { border-color: var(--powder); }
+.dg-chip.on { background: var(--powder); color: var(--navy); border-color: var(--powder); }
+.dg-chip.on em { opacity: 1; }
+.dg-laser-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 28px; padding: 18px 18px 18px 26px; border-radius: 999px; border: 1px solid rgba(178, 212, 223, .35); color: var(--powder); }
+.dg-laser-bar.on { background: rgba(178, 212, 223, .12); color: var(--cream); }
+.dg-laser-bar .btn.disabled { opacity: .4; pointer-events: none; }
+@media (max-width: 760px) { .dg-zones { grid-template-columns: 1fr; } .dg-laser-bar { border-radius: var(--radius); } }
+
+/* Approche : trois mots, sur nude */
+.dg-approach { background: var(--nude); padding: clamp(64px, 8vw, 104px) 0; }
+.dg-approach-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 64px); }
+.dg-approach h3 { font-size: clamp(2.2rem, 3.8vw, 3.4rem); font-weight: 300; margin: 0 0 12px; }
+.dg-approach p { margin: 0; color: var(--navy); max-width: 30ch; }
+@media (max-width: 760px) { .dg-approach-grid { grid-template-columns: 1fr; } }
+
+/* Réserver : trois temps, séquence numérotée en arches */
+.dg-steps { padding: clamp(72px, 9vw, 120px) 0; text-align: center; }
+.dg-steps h2 { font-size: clamp(2.4rem, 4.4vw, 3.8rem); font-weight: 300; margin-bottom: clamp(36px, 5vw, 56px); }
+.dg-steps ol { list-style: none; counter-reset: st; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); margin: 0 0 44px; padding: 0; }
+.dg-steps li { counter-increment: st; background: var(--white); border-radius: 999px 999px var(--radius) var(--radius); padding: 64px 28px 34px; border: 1px solid var(--sand); }
+.dg-steps li::before { content: counter(st); display: block; font-family: var(--serif); font-size: 2.6rem; line-height: 1; color: var(--powder); margin-bottom: 14px; -webkit-text-stroke: 1px var(--navy); }
+.dg-steps h3 { margin: 0 0 8px; }
+.dg-steps p { margin: 0 auto; color: var(--muted); max-width: 26ch; font-size: .95rem; }
+@media (max-width: 760px) { .dg-steps ol { grid-template-columns: 1fr; } }
+
+/* Avis */
+.dg-quote { margin: 0; padding: 32px 0 0; border-top: 1px solid var(--navy); }
+.dg-quote blockquote { margin: 16px 0; font-family: var(--serif); font-size: 1.45rem; line-height: 1.35; }
+.dg-quote figcaption { color: var(--muted); font-size: .9rem; }
+
+/* Pied de page : grand logo */
+.footer-mark { margin-top: clamp(40px, 6vw, 72px); }
+.footer-mark img { width: 100%; height: auto; opacity: .95; }
