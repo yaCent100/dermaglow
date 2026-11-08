@@ -16,7 +16,7 @@ export const SiteHeader = {
   template: `
   <header class="site-header" :class="{scrolled: scrolled || open}">
     <div class="container inner">
-      <RouterLink to="/" class="brand" aria-label="DermaGlow – accueil"><img src="/assets/img/logo.png" alt="DermaGlow" width="163" height="24"></RouterLink>
+      <RouterLink to="/" class="brand" aria-label="DermaGlow – accueil"><img src="/assets/img/logo.png" alt="DermaGlow" width="150" height="22"></RouterLink>
       <nav class="nav" aria-label="Navigation principale">
         <RouterLink to="/soins">Soins & tarifs</RouterLink>
         <RouterLink to="/blog">Journal</RouterLink>
@@ -93,9 +93,8 @@ export const SiteFooter = {
     <div class="container">
       <div class="footer-grid">
         <div>
-          <img src="/assets/img/logo-light.png" class="logo" alt="DermaGlow" width="170" height="25">
-          <p style="max-width:34ch;color:var(--cream)">Votre peau. Toute notre attention.</p>
-          <p style="max-width:34ch">{{ store.config?.tagline }}<template v-if="store.config?.city"> · {{ store.config.city }}</template></p>
+          <img src="/assets/img/logo-light.png" class="logo" alt="DermaGlow" width="165" height="24">
+          <p style="max-width:34ch">{{ store.config?.tagline }}. Des soins experts, dans un cadre apaisant, pour révéler l’éclat naturel de votre peau.</p>
           <a v-if="store.config?.instagram" :href="store.config.instagram" target="_blank" rel="noopener" class="row" style="gap:8px"><Icon name="instagram" /> Instagram</a>
         </div>
         <div>
@@ -121,7 +120,6 @@ export const SiteFooter = {
           <OpeningHours :hours="store.config?.opening_hours" />
         </div>
       </div>
-      <div class="footer-mark"><img src="/assets/img/logo-light.png" alt="" width="734" height="108" loading="lazy"></div>
       <div class="footer-bottom">
         <span>© {{ year }} {{ store.config?.salon_name || 'DermaGlow' }}. Tous droits réservés.</span>
         <span class="row" style="gap:20px"><RouterLink to="/conditions">Conditions de réservation</RouterLink><RouterLink to="/confidentialite">Confidentialité</RouterLink></span>
